@@ -2,42 +2,42 @@
 
 @font-face {
   font-family: "BasePixel";
-  src: url("/fonts/BasePixel-HighResolution.otf") format("opentype");
+  src: url("/font/BasePixel-HighResolution.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "BasePixel";
-  src: url("/fonts/BasePixel-LowResolution.otf") format("opentype");
+  src: url("/font/BasePixel-LowResolution.otf") format("opentype");
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: "BasePixel";
-  src: url("/fonts/BasePixel-MediumResolution.otf") format("opentype");
+  src: url("/font/BasePixel-MediumResolution.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: "BasePixel";
-  src: url("/fonts/BasePixel-ReducedResolution.otf") format("opentype");
+  src: url("/font/BasePixel-ReducedResolution.otf") format("opentype");
   font-weight: 200;
   font-style: normal;
 }
 
 @font-face {
   font-family: "BasePixel";
-  src: url("/fonts/BasePixel-TrashResolution.otf") format("opentype");
+  src: url("/font/BasePixel-TrashResolution.otf") format("opentype");
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: "BasePixelVF";
-  src: url("/fonts/BasePixelVF.ttf") format("truetype");
+  src: url("/font/BasePixelVF.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }

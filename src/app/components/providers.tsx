@@ -8,22 +8,22 @@ import {
 import { HTTPException } from "hono/http-exception";
 import { PropsWithChildren, useState } from "react";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
-import { base } from "wagmi/chains"; // add baseSepolia for testing
+import { base, baseSepolia } from "wagmi/chains"; // add baseSepolia for testing
 
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { baseSepolia } from "wagmi/chains";
 import { coinbaseWallet } from "wagmi/connectors";
 
 const wagmiConfig = createConfig({
-  chains: [baseSepolia],
+  chains: [baseSepolia, base],
   connectors: [
     coinbaseWallet({
-      appName: "onchainkit",
+      appName: "Creative TV",
     }),
   ],
   ssr: true,
   transports: {
     [baseSepolia.id]: http(),
+    [base.id]: http()
   },
 });
 
@@ -47,7 +47,7 @@ export const Providers = ({ children }: PropsWithChildren) => {
       chain={base}
       config={{
         appearance: {
-          name: "Fleek-Base", // Displayed in modal header
+          name: "Creative TV", // Displayed in modal header
           logo: "https://fleek.xyz/favicon.ico", // Displayed in modal header
           mode: "dark", // 'light' | 'dark' | 'auto'
           theme: "default", // 'default' or custom theme
