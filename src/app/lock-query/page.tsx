@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { queryLocks, queryKeys } from '../../lib/unlock';
+import { useState } from 'react';
+import { queryLocks, queryKeys, NetworkId, Lock, Key } from '../../lib/unlock';
 
 export default function LockQueryPage() {
-  const [locks, setLocks] = useState<any[]>([]);
-  const [keys, setKeys] = useState<any[]>([]);
+  const [locks, setLocks] = useState<Lock[]>([]);
+  const [keys, setKeys] = useState<Key[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [network, setNetwork] = useState<number>(8453); // Default to Base network
+  const [network, setNetwork] = useState<NetworkId>(8453); // Properly typed as NetworkId
 
   // Function to fetch locks
   const fetchLocks = async () => {
@@ -22,7 +22,7 @@ export default function LockQueryPage() {
           orderBy: 'createdAtBlock',
           orderDirection: 'desc',
         },
-        [network]
+        [network] // Correctly passing network as an array of NetworkId
       );
       
       setLocks(locksData);
@@ -48,7 +48,7 @@ export default function LockQueryPage() {
         [network]
       );
       
-      setKeys(keysData);
+      setKeys(keysData.map((key) => ({ ...key, id: key.id.toString() })));
     } catch (err) {
       console.error('Error fetching keys:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
@@ -72,7 +72,7 @@ export default function LockQueryPage() {
         <select 
           className="w-full p-2 border rounded"
           value={network}
-          onChange={(e) => setNetwork(Number(e.target.value))}
+          onChange={(e) => setNetwork(Number(e.target.value) as NetworkId)}
         >
           <option value={8453}>Base Mainnet</option>
           <option value={137}>Polygon Mainnet</option>
@@ -113,7 +113,7 @@ export default function LockQueryPage() {
                     <td className="py-2 px-4 border-b">{lock.name || 'Unnamed Lock'}</td>
                     <td className="py-2 px-4 border-b font-mono text-sm">{formatAddress(lock.address)}</td>
                     <td className="py-2 px-4 border-b">{lock.price ? `${Number(lock.price) / 1e18} ETH` : 'N/A'}</td>
-                    <td className="py-2 px-4 border-b">{lock.totalKeys || '0'}</td>
+                    <td className="py-2 px-4 border-b">{typeof lock.totalKeys === 'number' ? lock.totalKeys : (lock.totalSupply || '0')}</td>
                     <td className="py-2 px-4 border-b">
                       <button
                         onClick={() => fetchKeysForLock(lock.address)}

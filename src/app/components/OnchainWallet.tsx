@@ -13,12 +13,10 @@ import { Avatar, Name } from "@coinbase/onchainkit/identity";
 
 interface OnchainWalletProps {
   className?: string;
-  buttonClassName?: string;
 }
 
 export default function OnchainWallet({
   className,
-  buttonClassName,
 }: OnchainWalletProps) {
   return (
     <div className={className}>

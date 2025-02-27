@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { useAccount } from 'wagmi';
 import UnlockAuth from '@/app/components/UnlockAuth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,9 +7,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
 
 export default function UnlockAuthDemo() {
-  const { address, isConnected } = useAccount();
-  const [activeTab, setActiveTab] = useState('auth');
-
   return (
     <div className="container mx-auto py-8 bg-black text-white min-h-screen">
       <h1 className="text-3xl font-bold mb-2">Unlock Protocol Authentication</h1>
@@ -23,12 +18,12 @@ export default function UnlockAuthDemo() {
         <Info className="h-4 w-4" />
         <AlertTitle>Demo Information</AlertTitle>
         <AlertDescription className="text-gray-300">
-          This demo shows how to integrate Unlock Protocol's authentication capabilities into your application.
+          This demo shows how to integrate Unlock Protocol&apos;s authentication capabilities into your application.
           You can use this approach to authenticate users and enable them to sign messages or perform transactions.
         </AlertDescription>
       </Alert>
 
-      <Tabs defaultValue="auth" onValueChange={setActiveTab} className="space-y-4">
+      <Tabs defaultValue="auth" className="space-y-4">
         <TabsList className="bg-gray-900 border-gray-800">
           <TabsTrigger value="auth">Authentication</TabsTrigger>
           <TabsTrigger value="code">Code Example</TabsTrigger>
