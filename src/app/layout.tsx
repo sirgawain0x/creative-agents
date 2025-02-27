@@ -4,10 +4,11 @@ import SimpleNavigation from "./components/SimpleNavigation";
 
 import "./globals.css";
 import "@coinbase/onchainkit/styles.css";
+import "./styles/wallet-override.css"; // Custom z-index overrides for wallet modals
 
 export const metadata: Metadata = {
-  title: "Creative TV",
-  description: "The way content should be.",
+  title: "Creative Memberships",
+  description: "Unlock Your Creativity",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

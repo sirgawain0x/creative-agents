@@ -18,7 +18,7 @@ const wagmiConfig = createConfig({
   connectors: [
     injected(),
     coinbaseWallet({
-      appName: "Creative TV",
+      appName: "Creative Memberships",
     }),
   ],
   ssr: true,
@@ -44,13 +44,14 @@ export const Providers = ({ children }: PropsWithChildren) => {
 
   return (
     <OnchainKitProvider
-      projectId={process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_ID || "YOUR_PROJECT_ID_HERE"}
-      chain={base}
+      projectId={
+        process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_ID || "YOUR_PROJECT_ID_HERE"
+      }
       config={{
         appearance: {
-          name: "Creative TV", // Displayed in modal header
+          name: "Creative Memberships", // Displayed in modal header
           logo: "https://bafybeiesvinhgaqvr62rj77jbwkazg3w6bhcrsfyg6zyozasaud53nucnm.ipfs.w3s.link/Creative%20TV%20Logo.png", // Displayed in modal header
-          mode: "dark", // 'light' | 'dark' | 'auto'
+          mode: "auto", // 'light' | 'dark' | 'auto'
           theme: "default", // 'default' or custom theme
         },
         wallet: {
@@ -59,6 +60,7 @@ export const Providers = ({ children }: PropsWithChildren) => {
           privacyUrl: "https://creativeplatform.xyz/docs/legal/privacy-policy",
         },
       }}
+      chain={base}
     >
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>

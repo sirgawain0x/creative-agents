@@ -25,11 +25,11 @@ export default function PaywallDemo() {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-16 pb-32">
       <h1 className="text-3xl font-bold mb-8">Unlock Protocol Paywall Demo</h1>
 
       {!isConnected ? (
-        <Alert className="mb-6">
+        <Alert className="mb-6 relative z-10">
           <AlertTitle>Connect your wallet</AlertTitle>
           <AlertDescription>
             Please connect your wallet using the button in the navigation bar to
@@ -37,7 +37,7 @@ export default function PaywallDemo() {
           </AlertDescription>
         </Alert>
       ) : (
-        <Alert className="mb-6 bg-green-50">
+        <Alert className="mb-6 bg-green-50 relative z-10">
           <CheckCircle2 className="h-4 w-4 text-green-600" />
           <AlertTitle className="text-black">Connected</AlertTitle>
           <AlertDescription className="text-black">
@@ -47,7 +47,7 @@ export default function PaywallDemo() {
       )}
 
       {purchaseHash && (
-        <Alert className="mb-6 bg-green-50 border-green-200">
+        <Alert className="mb-6 bg-green-50 border-green-200 relative z-10">
           <CheckCircle2 className="h-4 w-4 text-green-600" />
           <AlertTitle className="text-black">Purchase Successful!</AlertTitle>
           <AlertDescription className="text-black">

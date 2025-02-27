@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAccount } from "wagmi";
-import { Paywall, PaywallResponse } from "@unlock-protocol/paywall";
+import { Paywall, PaywallResponse, NetworkConfig } from "@unlock-protocol/paywall";
 import {
   NETWORKS,
   directNFTOwnershipCheck,
@@ -67,11 +67,11 @@ export default function PaywallComponent({
     }
   }, [address, lockAddress, chainId]);
 
-  // Initialize the paywall
+  // Initialize the paywall and register event listeners
   useEffect(() => {
     try {
       // Convert our NETWORKS object to the format expected by Paywall
-      const networkConfigs = Object.entries(NETWORKS).reduce(
+      const networkConfigs: { [key: string]: NetworkConfig } = Object.entries(NETWORKS).reduce(
         (acc, [id, config]) => {
           return {
             ...acc,
@@ -89,14 +89,46 @@ export default function PaywallComponent({
       console.log("Initializing Paywall with network configs:", networkConfigs);
       const paywallInstance = new Paywall(networkConfigs);
       setPaywall(paywallInstance);
+
+      // Add event listeners for Unlock Protocol events
+      // Define the type for Unlock Protocol events
+      type UnlockEvent = CustomEvent<Record<string, unknown>>;
+      
+      const handleTransactionSent = (event: Event) => {
+        // Cast to CustomEvent to access detail
+        const customEvent = event as UnlockEvent;
+        console.log("Transaction sent:", customEvent.detail);
+      };
+
+      const handleAuthenticated = (event: Event) => {
+        // Cast to CustomEvent to access detail
+        const customEvent = event as UnlockEvent;
+        console.log("User authenticated:", customEvent.detail);
+        // Check membership status after authentication
+        checkMembership();
+      };
+
+      const handleStatus = (event: Event) => {
+        // Cast to CustomEvent to access detail
+        const customEvent = event as UnlockEvent;
+        console.log("Unlock Protocol status:", customEvent.detail);
+      };
+
+      // Register event listeners
+      window.addEventListener('unlockProtocol.transactionSent', handleTransactionSent);
+      window.addEventListener('unlockProtocol.authenticated', handleAuthenticated);
+      window.addEventListener('unlockProtocol.status', handleStatus);
+
+      return () => {
+        // Clean up event listeners on component unmount
+        window.removeEventListener('unlockProtocol.transactionSent', handleTransactionSent);
+        window.removeEventListener('unlockProtocol.authenticated', handleAuthenticated);
+        window.removeEventListener('unlockProtocol.status', handleStatus);
+      };
     } catch (error) {
       console.error("Error initializing Paywall:", error);
     }
-
-    return () => {
-      // Cleanup if needed
-    };
-  }, []);
+  }, [checkMembership]);
 
   // Check if user already has a valid membership
   useEffect(() => {
@@ -116,10 +148,19 @@ export default function PaywallComponent({
         locks: {
           [lockAddress]: {
             network: network,
+            name: title,
+            // Add options for collecting user details if needed
+            emailRequired: false,
+            // Allow for 1 recipient by default
+            maxRecipients: 1,
+            skipRecipient: true,
           },
         },
         title,
-        pessimistic: true,
+        persistentCheckout: false, // Allow users to close the modal if they need to
+        pessimistic: true, // Wait for transaction confirmation for better reliability
+        messageToSign: "Sign to access Creative Membership content",
+        recipient: address,
       };
 
       console.log("Opening checkout with config:", paywallConfig);
@@ -127,7 +168,7 @@ export default function PaywallComponent({
       // Add timeout to prevent hanging on message channel issues
       const checkoutPromise = paywall.loadCheckoutModal(paywallConfig);
       const timeoutPromise = new Promise<PaywallResponse>((_, reject) =>
-        setTimeout(() => reject(new Error("Checkout modal timed out")), 15000)
+        setTimeout(() => reject(new Error("Checkout modal timed out")), 30000)
       );
 
       // Race the checkout against a timeout
@@ -141,10 +182,14 @@ export default function PaywallComponent({
       }
     } catch (error) {
       console.error("Error opening checkout:", error);
+      // If there's a timeout error, provide more helpful information
+      if (error instanceof Error && error.message === "Checkout modal timed out") {
+        alert("The checkout process is taking longer than expected. Please try again or check if your wallet is connected properly.");
+      }
     } finally {
       setIsLoading(false);
     }
-  }, [paywall, lockAddress, chainId, title, onPurchaseSuccess]);
+  }, [paywall, lockAddress, chainId, title, onPurchaseSuccess, address]);
 
   // If user is not connected, show a message
   if (!isConnected) {

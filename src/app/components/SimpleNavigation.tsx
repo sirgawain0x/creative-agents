@@ -34,7 +34,7 @@ export default function SimpleNavigation() {
                   className="ml-1 text-xl font-bold text-red-500"
                   style={{ fontFamily: "sans-serif" }}
                 >
-                  Membership
+                  Memberships
                 </span>
               </h1>
             </span>
