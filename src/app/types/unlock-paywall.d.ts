@@ -7,18 +7,18 @@ declare module "@unlock-protocol/paywall" {
     };
     title?: string;
     pessimistic?: boolean;
-    [key: string]: any;
+    [key: string]: unknown;
   }
 
   export interface PaywallResponse {
     hash?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   }
 
   export interface NetworkConfig {
     provider: string;
     unlockAddress: string;
-    [key: string]: any;
+    [key: string]: unknown;
   }
 
   export interface NetworkConfigs {

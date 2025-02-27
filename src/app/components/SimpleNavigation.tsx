@@ -2,20 +2,11 @@
 
 import React from "react";
 import Link from "next/link";
-import { useAccount } from "wagmi";
 import Image from "next/image";
 import { SITE_LOGO } from "@/lib/context";
 import OnchainWallet from "./OnchainWallet";
 
 export default function SimpleNavigation() {
-  const { address, isConnected } = useAccount();
-
-  const formatAddress = (address: string) => {
-    return `${address.substring(0, 6)}...${address.substring(
-      address.length - 4
-    )}`;
-  };
-
   return (
     <nav className="bg-gray-900 text-white p-4 border-b border-gray-800">
       <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between">

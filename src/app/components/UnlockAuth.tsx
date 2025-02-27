@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { Button } from "@/components/ui/button";
 import { injected } from "wagmi/connectors";
@@ -19,16 +19,7 @@ export default function UnlockAuth() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Check NFT ownership when address changes
-  useEffect(() => {
-    if (address && isConnected) {
-      checkNFTOwnership();
-    } else {
-      setNftStatus(null);
-    }
-  }, [address, isConnected]);
-
-  const checkNFTOwnership = async () => {
+  const checkNFTOwnership = useCallback(async () => {
     if (!address) return;
 
     setIsLoading(true);
@@ -41,14 +32,20 @@ export default function UnlockAuth() {
       setNftStatus(ownershipStatus);
     } catch (err) {
       console.error("Error checking NFT ownership:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to check NFT ownership"
-      );
-      setNftStatus(null);
+      setError("Failed to check NFT ownership");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [address]);
+
+  // Check NFT ownership when address changes
+  useEffect(() => {
+    if (address && isConnected) {
+      checkNFTOwnership();
+    } else {
+      setNftStatus(null);
+    }
+  }, [address, isConnected, checkNFTOwnership]);
 
   const formatAddress = (addr: string) => {
     if (!addr) return "";

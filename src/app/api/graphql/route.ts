@@ -88,8 +88,14 @@ export async function POST(request: NextRequest) {
       const data = await response.json();
       
       // Check for GraphQL-level errors
-      if (data.errors && data.errors.length > 0) {
-        console.warn('GraphQL query returned errors:', data.errors);
+      // Add type assertion to handle the unknown type
+      const graphqlResponse = data as { 
+        errors?: Array<{ message: string; locations?: Array<{ line: number; column: number }>; path?: string[] }>; 
+        data?: Record<string, unknown> 
+      };
+      
+      if (graphqlResponse.errors && graphqlResponse.errors.length > 0) {
+        console.warn('GraphQL query returned errors:', graphqlResponse.errors);
         // Still return the data along with the errors
       }
       
@@ -97,7 +103,7 @@ export async function POST(request: NextRequest) {
     } catch (fetchError) {
       console.error('Error fetching from GraphQL endpoint:', fetchError);
       return NextResponse.json(
-        { error: `Failed to fetch from GraphQL endpoint: ${fetchError.message}` },
+        { error: `Failed to fetch from GraphQL endpoint: ${fetchError instanceof Error ? fetchError.message : String(fetchError)}` },
         { status: 502 }
       );
     }

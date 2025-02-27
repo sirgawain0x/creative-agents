@@ -2,7 +2,46 @@ import { Web3Service, SubgraphService } from "@unlock-protocol/unlock-js";
 import { ethers } from "ethers";
 
 // Define network ID type to ensure type safety
-export type NetworkId = 8453; // Add other network IDs here if needed
+export type NetworkId = 8453 | 137; // Base and Polygon networks
+
+// Define Lock type
+export interface Lock {
+  network: number;
+  __typename?: "Lock";
+  id: string;
+  address: string;
+  name?: string | null;
+  expirationDuration?: number;
+  tokenAddress: string;
+  price: string;
+  lockManagers?: string[];
+  version?: string;
+  createdAtBlock?: number;
+  totalKeys?: number;
+  owner?: string;
+  totalSupply?: number;
+  [key: string]: unknown;
+}
+
+// Define Key type
+export interface Key {
+  id: string;
+  lock: {
+    address: string;
+    name?: string | null;
+    [key: string]: unknown;
+  };
+  owner: string;
+  expiration: number;
+  tokenId: string;
+  network?: number;
+  __typename?: "Key";
+  manager?: unknown;
+  tokenURI?: string | null;
+  createdAtBlock?: number;
+  cancelled?: boolean | null;
+  [key: string]: unknown;
+}
 
 // Network configurations
 export const NETWORKS = {
@@ -16,6 +55,17 @@ export const NETWORKS = {
     publicLockAddress: "0x45eBc3eAE6DA485097054ae10BA1A0f8e8c7f794", // Public Lock address for Base
     name: "Base", // Adding network name
     id: 8453, // Adding network ID explicitly
+  },
+  // Polygon Mainnet
+  137: {
+    unlockAddress: "0x1FF7e338d5E582138C46044dc238543Ce555C963",
+    provider:
+      process.env.NEXT_PUBLIC_POLYGON_RPC_URL ||
+      "https://polygon-rpc.com",
+    // Required for contract interactions
+    publicLockAddress: "0x45eBc3eAE6DA485097054ae10BA1A0f8e8c7f794", // Public Lock address for Polygon
+    name: "Polygon", // Adding network name
+    id: 137, // Adding network ID explicitly
   },
 } as const;
 
@@ -40,6 +90,16 @@ const web3Service = new Web3Service({
     id: NETWORKS[8453].id,
     locksmithUri: 'https://locksmith.unlock-protocol.com',
     subgraphURI: 'https://api.thegraph.com/subgraphs/name/unlock-protocol/base-v2'
+  },
+  137: {
+    provider: NETWORKS[137].provider,
+    unlockAddress: NETWORKS[137].unlockAddress,
+    publicLockAddress: NETWORKS[137].publicLockAddress,
+    network: NETWORKS[137].id,
+    name: NETWORKS[137].name,
+    id: NETWORKS[137].id,
+    locksmithUri: 'https://locksmith.unlock-protocol.com',
+    subgraphURI: 'https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon-v2'
   }
 });
 
@@ -63,10 +123,10 @@ export async function queryLocks(
     skip?: number;
     orderBy?: string;
     orderDirection?: "asc" | "desc";
-    where?: Record<string, any>;
+    where?: Record<string, unknown>;
   } = {},
   networks: NetworkId[] = [8453]
-): Promise<any[]> {
+): Promise<Lock[]> {
   try {
     const locks = await subgraphService.locks(
       {
@@ -102,10 +162,10 @@ export async function queryKeys(
     skip?: number;
     orderBy?: string;
     orderDirection?: "asc" | "desc";
-    where?: Record<string, any>;
+    where?: Record<string, unknown>;
   } = {},
   networks: NetworkId[] = [8453]
-): Promise<any[]> {
+): Promise<Key[]> {
   try {
     const keys = await subgraphService.keys(
       {

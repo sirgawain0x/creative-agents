@@ -8,7 +8,7 @@ import { useGraphQLErrorHandling } from "../../hooks/useGraphQLErrorHandling";
 
 export function LockManager() {
   const { address, isConnected } = useAccount();
-  const { uiError, handleError, clearError } = useGraphQLErrorHandling();
+  const { handleError, clearError } = useGraphQLErrorHandling();
   const [pollingInterval] = useState(30000); // 30 seconds
   const [pollingActive, setPollingActive] = useState(true);
   const errorCountRef = useRef(0);
@@ -159,7 +159,7 @@ export function LockManager() {
         </button>
         {!pollingActive && (
           <p className="text-xs text-red-500 mt-2">
-            Auto-refresh disabled due to errors. Click "Retry" to resume.
+            Auto-refresh disabled due to errors. Click &quot;Retry&quot; to resume.
           </p>
         )}
       </div>
@@ -187,7 +187,7 @@ export function LockManager() {
 
   return (
     <div className="p-4 border rounded-lg bg-green-50">
-      <p className="text-green-700 font-medium">Membership verified! ✓</p>
+      <p className="text-green-700 font-medium">Membership verified! &#10003;</p>
       <div className="mt-2 grid grid-cols-1 gap-2">
         {nftStatus.BRAND && (
           <div className="text-sm bg-green-100 p-2 rounded">

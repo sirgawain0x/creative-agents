@@ -5,14 +5,12 @@ import { useAccount } from "wagmi";
 import { Paywall, PaywallResponse } from "@unlock-protocol/paywall";
 import {
   NETWORKS,
-  hasValidKey,
   directNFTOwnershipCheck,
   NetworkId,
   isValidChainId,
 } from "@/lib/unlock";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
-import { Token } from "@coinbase/onchainkit/token";
 
 interface PaywallComponentProps {
   lockAddress: string;
@@ -147,16 +145,6 @@ export default function PaywallComponent({
       setIsLoading(false);
     }
   }, [paywall, lockAddress, chainId, title, onPurchaseSuccess]);
-
-  // Define the ETH token for Base
-  const ethToken: Token = {
-    name: "ETH",
-    address: "0x4200000000000000000000000000000000000006", // Base ETH
-    symbol: "ETH",
-    decimals: 18,
-    chainId: 8453,
-    image: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
-  };
 
   // If user is not connected, show a message
   if (!isConnected) {

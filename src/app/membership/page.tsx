@@ -28,7 +28,12 @@ export default function MembershipPage() {
     setIsChecking(true);
     try {
       const status = await checkCreativeNFTOwnership(walletAddress);
-      setMembershipStatus(status);
+      setMembershipStatus({
+        brand: status.BRAND,
+        investor: status.INVESTOR,
+        creator: status.CREATOR,
+        ownsAny: status.anyNFT
+      });
     } catch (error) {
       console.error('Error checking membership status:', error);
     } finally {
