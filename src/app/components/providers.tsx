@@ -8,14 +8,15 @@ import {
 import { HTTPException } from "hono/http-exception";
 import { PropsWithChildren, useState } from "react";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
-import { base, baseSepolia } from "wagmi/chains"; // add baseSepolia for testing
+import { base, baseSepolia } from "wagmi/chains";
 
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { coinbaseWallet } from "wagmi/connectors";
+import { coinbaseWallet, injected } from "wagmi/connectors";
 
 const wagmiConfig = createConfig({
   chains: [baseSepolia, base],
   connectors: [
+    injected(),
     coinbaseWallet({
       appName: "Creative TV",
     }),
@@ -23,7 +24,7 @@ const wagmiConfig = createConfig({
   ssr: true,
   transports: {
     [baseSepolia.id]: http(),
-    [base.id]: http()
+    [base.id]: http(),
   },
 });
 
@@ -43,19 +44,19 @@ export const Providers = ({ children }: PropsWithChildren) => {
 
   return (
     <OnchainKitProvider
-      apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
+      projectId={process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_ID || "YOUR_PROJECT_ID_HERE"}
       chain={base}
       config={{
         appearance: {
           name: "Creative TV", // Displayed in modal header
-          logo: "https://fleek.xyz/favicon.ico", // Displayed in modal header
+          logo: "https://bafybeiesvinhgaqvr62rj77jbwkazg3w6bhcrsfyg6zyozasaud53nucnm.ipfs.w3s.link/Creative%20TV%20Logo.png", // Displayed in modal header
           mode: "dark", // 'light' | 'dark' | 'auto'
           theme: "default", // 'default' or custom theme
         },
         wallet: {
           display: "modal",
-          termsUrl: "https://fleek.xyz/legal/terms-of-service/",
-          privacyUrl: "https://fleek.xyz/legal/privacy-policy/",
+          termsUrl: "https://creativeplatform.xyz/docs/legal/terms-conditions",
+          privacyUrl: "https://creativeplatform.xyz/docs/legal/privacy-policy",
         },
       }}
     >
