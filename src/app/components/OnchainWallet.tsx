@@ -19,7 +19,7 @@ export default function OnchainWallet({
   className,
 }: OnchainWalletProps) {
   return (
-    <div className={className}>
+    <div className={`${className} relative z-50`}>
       <Wallet>
         <ConnectWallet>
           <Avatar className="w-6 h-6 mr-2" />

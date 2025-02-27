@@ -17,86 +17,98 @@ export default function Home() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         <Card className="bg-gray-900 border-gray-800 text-white">
-          <Link
-            href={"https://creativeplatform.xyz/blog/creator-membership"}
-            target="_blank"
-          >
-            <CardHeader>
-              <CardTitle>Creator NFT</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4">
-                Exclusive membership for content creators and artists. Unlock
-                special tools and resources to help you grow your creative
-                business.
-              </p>
-              <p className="text-sm text-gray-400 mb-2">
-                Contract:&nbsp;
-                <Link
-                  href="https://basescan.org/address/0xf7c4cd399395d80f9d61fde833849106775269c6"
-                  className="text-sm text-gray-400 mb-2"
-                >
-                  0xf7c4cd399395d80f9d61fde833849106775269c6
-                </Link>
-              </p>
-              <p className="text-sm text-gray-400">Network: Base Mainnet</p>
-            </CardContent>
-          </Link>
+          <CardHeader>
+            <CardTitle>Creator NFT</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4">
+              Exclusive membership for content creators and artists. Unlock
+              special tools and resources to help you grow your creative
+              business.
+            </p>
+            <p className="text-sm text-gray-400 mb-2">
+              Contract:&nbsp;
+              <Link
+                href="https://basescan.org/address/0xf7c4cd399395d80f9d61fde833849106775269c6"
+                className="text-sm text-gray-400 mb-2"
+              >
+                0xf7c4cd399395d80f9d61fde833849106775269c6
+              </Link>
+            </p>
+            <p className="text-sm text-gray-400">Network: Base Mainnet</p>
+            <div className="mt-4">
+              <Link
+                href="https://creativeplatform.xyz/blog/creator-membership"
+                target="_blank"
+                className="text-blue-400 hover:text-blue-300"
+              >
+                Learn more →
+              </Link>
+            </div>
+          </CardContent>
         </Card>
 
         <Card className="bg-gray-900 border-gray-800 text-white">
-          <Link
-            href={"https://creativeplatform.xyz/blog/brand-membership"}
-            target="_blank"
-          >
-            <CardHeader>
-              <CardTitle>Brand NFT</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4">
-                For brands looking to collaborate with creators. Get access to
-                our network of talented creators and exclusive partnership
-                opportunities.
-              </p>
-              <p className="text-sm text-gray-400 mb-2">
-                Contract:&nbsp;
-                <Link
-                  href="https://basescan.org/address/0x9c3744c96200a52d05a630d4aec0db707d7509be"
-                  className="text-sm text-gray-400 mb-2"
-                >
-                  0x9c3744c96200a52d05a630d4aec0db707d7509be
-                </Link>
-              </p>
-              <p className="text-sm text-gray-400">Network: Base Mainnet</p>
-            </CardContent>
-          </Link>
+          <CardHeader>
+            <CardTitle>Brand NFT</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4">
+              For brands looking to collaborate with creators. Get access to
+              our network of talented creators and exclusive partnership
+              opportunities.
+            </p>
+            <p className="text-sm text-gray-400 mb-2">
+              Contract:&nbsp;
+              <Link
+                href="https://basescan.org/address/0x9c3744c96200a52d05a630d4aec0db707d7509be"
+                className="text-sm text-gray-400 mb-2"
+              >
+                0x9c3744c96200a52d05a630d4aec0db707d7509be
+              </Link>
+            </p>
+            <p className="text-sm text-gray-400">Network: Base Mainnet</p>
+            <div className="mt-4">
+              <Link
+                href="https://creativeplatform.xyz/blog/brand-membership"
+                target="_blank"
+                className="text-blue-400 hover:text-blue-300"
+              >
+                Learn more →
+              </Link>
+            </div>
+          </CardContent>
         </Card>
 
         <Card className="bg-gray-900 border-gray-800 text-white">
-          <Link
-            href={"https://creativeplatform.xyz/blog/investor-membership"}
-            target="_blank"
-          >
-            <CardHeader>
-              <CardTitle>Investor NFT</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4">
-                For investors interested in supporting the creative economy. Get
-                early access to promising projects and investment opportunities.
-              </p>
-              <p className="text-sm text-gray-400 mb-2">
-                Contract:&nbsp;
-                <Link
-                  href="https://basescan.org/address/0x13b818daf7016b302383737ba60c3a39fef231cf"
-                  className="text-sm text-gray-400 mb-2"
-                >
-                  0x13b818daf7016b302383737ba60c3a39fef231cf
-                </Link>
-              </p>
-              <p className="text-sm text-gray-400">Network: Base Mainnet</p>
-            </CardContent>
-          </Link>
+          <CardHeader>
+            <CardTitle>Investor NFT</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4">
+              For investors interested in supporting the creative economy. Get
+              early access to promising projects and investment opportunities.
+            </p>
+            <p className="text-sm text-gray-400 mb-2">
+              Contract:&nbsp;
+              <Link
+                href="https://basescan.org/address/0x13b818daf7016b302383737ba60c3a39fef231cf"
+                className="text-sm text-gray-400 mb-2"
+              >
+                0x13b818daf7016b302383737ba60c3a39fef231cf
+              </Link>
+            </p>
+            <p className="text-sm text-gray-400">Network: Base Mainnet</p>
+            <div className="mt-4">
+              <Link
+                href="https://creativeplatform.xyz/blog/investor-membership"
+                target="_blank"
+                className="text-blue-400 hover:text-blue-300"
+              >
+                Learn more →
+              </Link>
+            </div>
+          </CardContent>
         </Card>
       </div>
 

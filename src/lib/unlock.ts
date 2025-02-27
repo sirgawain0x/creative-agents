@@ -2,7 +2,7 @@ import { Web3Service, SubgraphService } from "@unlock-protocol/unlock-js";
 import { ethers } from "ethers";
 
 // Define network ID type to ensure type safety
-export type NetworkId = 8453 | 137; // Base and Polygon networks
+export type NetworkId = 8453; // Base network only
 
 // Define Lock type
 export interface Lock {
@@ -47,25 +47,14 @@ export interface Key {
 export const NETWORKS = {
   // Base Mainnet
   8453: {
-    unlockAddress: "0x1FF7e338d5E582138C46044dc238543Ce555C963",
+    unlockAddress: "0xd0b14797b9D08493392865647384974470202A78",
     provider:
       process.env.NEXT_PUBLIC_BASE_RPC_URL ||
       "https://rpc.unlock-protocol.com/8453",
     // Required for contract interactions
-    publicLockAddress: "0x45eBc3eAE6DA485097054ae10BA1A0f8e8c7f794", // Public Lock address for Base
+    publicLockAddress: "0xf7c4cd399395d80f9d61fde833849106775269c6", // Public Lock address for Base
     name: "Base", // Adding network name
     id: 8453, // Adding network ID explicitly
-  },
-  // Polygon Mainnet
-  137: {
-    unlockAddress: "0x1FF7e338d5E582138C46044dc238543Ce555C963",
-    provider:
-      process.env.NEXT_PUBLIC_POLYGON_RPC_URL ||
-      "https://polygon-rpc.com",
-    // Required for contract interactions
-    publicLockAddress: "0x45eBc3eAE6DA485097054ae10BA1A0f8e8c7f794", // Public Lock address for Polygon
-    name: "Polygon", // Adding network name
-    id: 137, // Adding network ID explicitly
   },
 } as const;
 
@@ -88,19 +77,10 @@ const web3Service = new Web3Service({
     network: NETWORKS[8453].id,
     name: NETWORKS[8453].name,
     id: NETWORKS[8453].id,
-    locksmithUri: 'https://locksmith.unlock-protocol.com',
-    subgraphURI: 'https://api.thegraph.com/subgraphs/name/unlock-protocol/base-v2'
+    locksmithUri: "https://locksmith.unlock-protocol.com",
+    subgraphURI:
+      "https://api.thegraph.com/subgraphs/name/unlock-protocol/base-v2",
   },
-  137: {
-    provider: NETWORKS[137].provider,
-    unlockAddress: NETWORKS[137].unlockAddress,
-    publicLockAddress: NETWORKS[137].publicLockAddress,
-    network: NETWORKS[137].id,
-    name: NETWORKS[137].name,
-    id: NETWORKS[137].id,
-    locksmithUri: 'https://locksmith.unlock-protocol.com',
-    subgraphURI: 'https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon-v2'
-  }
 });
 
 // Add a helper to check if Web3Service is properly initialized
@@ -212,10 +192,7 @@ export async function getLockDetails(
   }
 
   try {
-    const lock = await web3Service.getLock(
-      lockAddress,
-      chainId
-    );
+    const lock = await web3Service.getLock(lockAddress, chainId);
 
     if (!lock) {
       throw new Error("Lock not found on the specified network");
@@ -269,20 +246,26 @@ export async function hasValidKey(
   }
 
   try {
-    console.log(`Checking key validity for ${userAddress} at lock ${lockAddress} on chain ${chainId}`);
-    
+    console.log(
+      `Checking key validity for ${userAddress} at lock ${lockAddress} on chain ${chainId}`
+    );
+
     // Normalize addresses to checksum format
     const normalizedUserAddress = ethers.utils.getAddress(userAddress);
     const normalizedLockAddress = ethers.utils.getAddress(lockAddress);
 
     // Verify we have a provider for this chain
     const networkConfig = NETWORKS[chainId];
-    const provider = new ethers.providers.JsonRpcProvider(networkConfig.provider);
-    
+    const provider = new ethers.providers.JsonRpcProvider(
+      networkConfig.provider
+    );
+
     // Instead of directly setting the network property, just get the network info
     // and use the network name from our config in the log
     const network = await provider.getNetwork();
-    console.log(`Connected to network: ${networkConfig.name} (${network.chainId})`);
+    console.log(
+      `Connected to network: ${networkConfig.name} (${network.chainId})`
+    );
 
     // First try to check ownership using ethers directly
     try {
@@ -291,31 +274,45 @@ export async function hasValidKey(
         "function balanceOf(address owner) view returns (uint256)",
         "function ownerOf(uint256 tokenId) view returns (address)",
       ]);
-      
-      const contract = new ethers.Contract(normalizedLockAddress, erc721Interface, provider);
+
+      const contract = new ethers.Contract(
+        normalizedLockAddress,
+        erc721Interface,
+        provider
+      );
       const balance = await contract.balanceOf(normalizedUserAddress);
-      console.log(`NFT balance for ${normalizedUserAddress}: ${balance.toString()}`);
-      
+      console.log(
+        `NFT balance for ${normalizedUserAddress}: ${balance.toString()}`
+      );
+
       if (balance.gt(0)) {
-        console.log(`User has ${balance.toString()} keys for lock ${normalizedLockAddress}`);
+        console.log(
+          `User has ${balance.toString()} keys for lock ${normalizedLockAddress}`
+        );
         return true;
       }
     } catch (error) {
       // Type guard for the error object
       const erc721Error = error as Error;
-      console.log(`ERC721 direct check failed, falling back to Web3Service: ${erc721Error.message || 'Unknown error'}`);
+      console.log(
+        `ERC721 direct check failed, falling back to Web3Service: ${
+          erc721Error.message || "Unknown error"
+        }`
+      );
     }
 
     // Fallback to Web3Service
     try {
-      console.log(`Attempting Web3Service check for lock: ${normalizedLockAddress}`);
-      
+      console.log(
+        `Attempting Web3Service check for lock: ${normalizedLockAddress}`
+      );
+
       // Verify Web3Service is properly initialized
       if (!isWeb3ServiceInitialized()) {
-        console.error('Web3Service is not initialized');
+        console.error("Web3Service is not initialized");
         return false;
       }
-      
+
       const hasKey = await web3Service.getHasValidKey(
         normalizedLockAddress,
         normalizedUserAddress,
@@ -328,22 +325,28 @@ export async function hasValidKey(
       return hasKey;
     } catch (error: unknown) {
       // Type guard for the error object
-      const web3ServiceError = error instanceof Error ? error : new Error(String(error));
-      console.error(`Web3Service check failed: ${web3ServiceError.message || 'Unknown error'}`);
-      
+      const web3ServiceError =
+        error instanceof Error ? error : new Error(String(error));
+      console.error(
+        `Web3Service check failed: ${
+          web3ServiceError.message || "Unknown error"
+        }`
+      );
+
       // Log additional debugging information
-      console.debug('Web3Service configuration:', {
+      console.debug("Web3Service configuration:", {
         chainId,
         networkConfig: NETWORKS[chainId],
-        web3ServiceConfig: web3Service.networks?.[chainId]
+        web3ServiceConfig: web3Service.networks?.[chainId],
       });
-      
+
       // Continue with execution rather than throwing
       return false;
     }
   } catch (error: unknown) {
     // Ensure error is properly typed for logging
-    const typedError = error instanceof Error ? error : new Error(String(error));
+    const typedError =
+      error instanceof Error ? error : new Error(String(error));
     console.error(
       `Error checking key validity for address ${userAddress} and lock ${lockAddress}:`,
       typedError
@@ -370,19 +373,25 @@ export async function directNFTOwnershipCheck(
     // Normalize addresses
     const normalizedUserAddress = ethers.utils.getAddress(userAddress);
     const normalizedLockAddress = ethers.utils.getAddress(lockAddress);
-    
+
     // Get provider
-    const provider = new ethers.providers.JsonRpcProvider(NETWORKS[chainId].provider);
-    
+    const provider = new ethers.providers.JsonRpcProvider(
+      NETWORKS[chainId].provider
+    );
+
     // Basic ERC721 interface for ownership check
     const erc721Interface = new ethers.utils.Interface([
       "function balanceOf(address owner) view returns (uint256)",
       "function ownerOf(uint256 tokenId) view returns (address)",
     ]);
-    
-    const contract = new ethers.Contract(normalizedLockAddress, erc721Interface, provider);
+
+    const contract = new ethers.Contract(
+      normalizedLockAddress,
+      erc721Interface,
+      provider
+    );
     const balance = await contract.balanceOf(normalizedUserAddress);
-    
+
     return balance.gt(0);
   } catch (error) {
     console.error(`Direct NFT ownership check failed:`, error);
@@ -418,51 +427,64 @@ export async function checkCreativeNFTOwnership(address: string): Promise<{
 
   try {
     // Check each NFT type in parallel for efficiency
-    const [creatorResult, brandResult, investorResult] = await Promise.allSettled([
-      // Check Creator NFT
-      (async () => {
-        try {
-          console.log("Checking Creator NFT ownership...");
-          const hasCreator = await directNFTOwnershipCheck(address, NFT_CONTRACTS.CREATOR);
-          console.log("Creator NFT ownership result:", hasCreator);
-          return hasCreator;
-        } catch (error) {
-          console.error("Error checking Creator NFT:", error);
-          return false;
-        }
-      })(),
-      
-      // Check Brand NFT
-      (async () => {
-        try {
-          console.log("Checking Brand NFT ownership...");
-          const hasBrand = await directNFTOwnershipCheck(address, NFT_CONTRACTS.BRAND);
-          console.log("Brand NFT ownership result:", hasBrand);
-          return hasBrand;
-        } catch (error) {
-          console.error("Error checking Brand NFT:", error);
-          return false;
-        }
-      })(),
-      
-      // Check Investor NFT
-      (async () => {
-        try {
-          console.log("Checking Investor NFT ownership...");
-          const hasInvestor = await directNFTOwnershipCheck(address, NFT_CONTRACTS.INVESTOR);
-          console.log("Investor NFT ownership result:", hasInvestor);
-          return hasInvestor;
-        } catch (error) {
-          console.error("Error checking Investor NFT:", error);
-          return false;
-        }
-      })(),
-    ]);
+    const [creatorResult, brandResult, investorResult] =
+      await Promise.allSettled([
+        // Check Creator NFT
+        (async () => {
+          try {
+            console.log("Checking Creator NFT ownership...");
+            const hasCreator = await directNFTOwnershipCheck(
+              address,
+              NFT_CONTRACTS.CREATOR
+            );
+            console.log("Creator NFT ownership result:", hasCreator);
+            return hasCreator;
+          } catch (error) {
+            console.error("Error checking Creator NFT:", error);
+            return false;
+          }
+        })(),
+
+        // Check Brand NFT
+        (async () => {
+          try {
+            console.log("Checking Brand NFT ownership...");
+            const hasBrand = await directNFTOwnershipCheck(
+              address,
+              NFT_CONTRACTS.BRAND
+            );
+            console.log("Brand NFT ownership result:", hasBrand);
+            return hasBrand;
+          } catch (error) {
+            console.error("Error checking Brand NFT:", error);
+            return false;
+          }
+        })(),
+
+        // Check Investor NFT
+        (async () => {
+          try {
+            console.log("Checking Investor NFT ownership...");
+            const hasInvestor = await directNFTOwnershipCheck(
+              address,
+              NFT_CONTRACTS.INVESTOR
+            );
+            console.log("Investor NFT ownership result:", hasInvestor);
+            return hasInvestor;
+          } catch (error) {
+            console.error("Error checking Investor NFT:", error);
+            return false;
+          }
+        })(),
+      ]);
 
     // Process results
-    result.CREATOR = creatorResult.status === 'fulfilled' ? creatorResult.value : false;
-    result.BRAND = brandResult.status === 'fulfilled' ? brandResult.value : false;
-    result.INVESTOR = investorResult.status === 'fulfilled' ? investorResult.value : false;
+    result.CREATOR =
+      creatorResult.status === "fulfilled" ? creatorResult.value : false;
+    result.BRAND =
+      brandResult.status === "fulfilled" ? brandResult.value : false;
+    result.INVESTOR =
+      investorResult.status === "fulfilled" ? investorResult.value : false;
 
     // Check if user owns any NFT
     result.anyNFT = result.CREATOR || result.BRAND || result.INVESTOR;
@@ -477,8 +499,6 @@ export async function checkCreativeNFTOwnership(address: string): Promise<{
 }
 
 // Utility function to check valid networks
-export function isValidChainId(
-  chainId: number
-): chainId is NetworkId {
+export function isValidChainId(chainId: number): chainId is NetworkId {
   return Object.keys(NETWORKS).includes(String(chainId));
 }
