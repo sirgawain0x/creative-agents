@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Address } from "@coinbase/onchainkit/identity";
 
 export default function Home() {
   return (
@@ -11,7 +12,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold mb-4">The Creative Platform</h1>
         <p className="text-xl text-gray-400 max-w-3xl mx-auto">
           A blockchain-based membership platform for creators, brands, and
-          investors using Unlock Protocol NFTs.
+          investors.
         </p>
       </div>
 
@@ -32,10 +33,19 @@ export default function Home() {
                 href="https://basescan.org/address/0xf7c4cd399395d80f9d61fde833849106775269c6"
                 className="text-sm text-gray-400 mb-2"
               >
-                0xf7c4cd399395d80f9d61fde833849106775269c6
+                <Address address="0xf7c4cd399395d80f9d61fde833849106775269c6" />
               </Link>
             </p>
-            <p className="text-sm text-gray-400">Network: Base Mainnet</p>
+            <p className="text-sm text-gray-400">
+              Network:&nbsp;
+              <Link
+                href="https://basescan.org/address/0xf7c4cd399395d80f9d61fde833849106775269c6"
+                target="_blank"
+                className="text-blue-400 hover:text-blue-300"
+              >
+                Base Mainnet
+              </Link>
+            </p>
             <div className="mt-4">
               <Link
                 href="https://creativeplatform.xyz/blog/creator-membership"
@@ -54,20 +64,24 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <p className="mb-4">
-              For brands looking to collaborate with creators. Get access to
-              our network of talented creators and exclusive partnership
+              For brands looking to collaborate with creators. Get access to our
+              network of talented creators and exclusive partnership
               opportunities.
             </p>
             <p className="text-sm text-gray-400 mb-2">
               Contract:&nbsp;
+              <Address address="0x9c3744c96200a52d05a630d4aec0db707d7509be" />
+            </p>
+            <p className="text-sm text-gray-400">
+              Network:&nbsp;
               <Link
                 href="https://basescan.org/address/0x9c3744c96200a52d05a630d4aec0db707d7509be"
-                className="text-sm text-gray-400 mb-2"
+                target="_blank"
+                className="text-blue-400 hover:text-blue-300"
               >
-                0x9c3744c96200a52d05a630d4aec0db707d7509be
+                Base Mainnet
               </Link>
             </p>
-            <p className="text-sm text-gray-400">Network: Base Mainnet</p>
             <div className="mt-4">
               <Link
                 href="https://creativeplatform.xyz/blog/brand-membership"
@@ -91,14 +105,17 @@ export default function Home() {
             </p>
             <p className="text-sm text-gray-400 mb-2">
               Contract:&nbsp;
+              <Address address="0x13b818daf7016b302383737ba60c3a39fef231cf" />
+            </p>
+            <p className="text-sm text-gray-400">
+              Network:&nbsp;
               <Link
                 href="https://basescan.org/address/0x13b818daf7016b302383737ba60c3a39fef231cf"
-                className="text-sm text-gray-400 mb-2"
+                className="text-sm text-gray-400 mb-2 underline"
               >
-                0x13b818daf7016b302383737ba60c3a39fef231cf
+                Base Mainnet
               </Link>
             </p>
-            <p className="text-sm text-gray-400">Network: Base Mainnet</p>
             <div className="mt-4">
               <Link
                 href="https://creativeplatform.xyz/blog/investor-membership"
